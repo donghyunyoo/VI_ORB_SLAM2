@@ -13,10 +13,13 @@ typedef Matrix<double, 15, 1> Vector15d;
 typedef Matrix<double, 9, 1> Vector9d;
 typedef Matrix<double, 6, 1> Vector6d;
 
+#define EIGEN_DONT_VECTORIZE
+#define EIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
+
 class NavState
 {
 public:
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    //EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     NavState();
     NavState(const NavState& _ns);

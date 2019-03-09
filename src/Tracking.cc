@@ -40,6 +40,7 @@
 
 #define TRACK_WITH_IMU
 
+
 using namespace std;
 
 namespace ORB_SLAM2
@@ -887,7 +888,10 @@ void Tracking::Track()
             else
             {
                 bOK = Relocalization();
-                if (bOK) cout << "Relocalized. id: " << mCurrentFrame.mnId << endl;
+                cout << "try relocalization" <<endl;
+
+                //if (bOK) cout << "Relocalized. id: " << mCurrentFrame.mnId << endl;
+                if (bOK) cout << "Relocalized. id: " << endl;
             }
         }
         else
@@ -920,6 +924,7 @@ void Tracking::Track()
                         bOK = TrackLocalMapWithIMU(bMapUpdated);//替换了原来的TrackLocalMap()；
                     }
                 }
+                cout << "track localmap" <<endl;
 #endif
             }
         }
@@ -936,7 +941,14 @@ void Tracking::Track()
             // Add Frames to re-compute IMU bias after reloc
             if (mbRelocBiasPrepare)
             {
+                cout<<"before push_back" <<endl;
+                cout<<"mCurrentFrame fx="<<mCurrentFrame.fx<<endl;
+                cout<<"mv20FramesReloc size="<<mv20FramesReloc.size()<<endl;
+                
+                /* code */
                 mv20FramesReloc.push_back(mCurrentFrame);
+                cout<<"after push_back" <<endl;
+                
 
                 // Before creating new keyframe
                 // Use 20 consecutive frames to re-compute IMU bias
@@ -963,6 +975,7 @@ void Tracking::Track()
                     cout << "dbg:" << mCurrentFrame.GetNavState().Get_dBias_Gyr().transpose() << endl;
                     cout << "dba:" << mCurrentFrame.GetNavState().Get_dBias_Acc().transpose() << endl;
                 }
+                cout << "add keyframe" <<endl;
             }
         }
         else
@@ -976,6 +989,7 @@ void Tracking::Track()
 
         // Update drawer
         mpFrameDrawer->Update(this);
+        cout << "update drawer" <<endl;
 
         // If tracking were good, check if we insert a keyframe
         if (bOK)
@@ -1054,6 +1068,7 @@ void Tracking::Track()
             mCurrentFrame.mpReferenceKF = mpReferenceKF;
 
         mLastFrame = Frame(mCurrentFrame);
+        cout << "update frame" << endl;
     }
 
     // Store frame pose information to retrieve the complete camera trajectory afterwards.

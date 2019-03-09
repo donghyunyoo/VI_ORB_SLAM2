@@ -20,6 +20,7 @@ Thirdparty/g2o/lib/
 Vocabulary/ORBvoc.txt
 Vocabulary/bin_vocabulary
 build/
+tmp_result/
 *~
 lib/
 .idea/
@@ -35,9 +36,18 @@ lib/
 **.tags
 **.tags_sorted_by_file
 **/build*/*
+**/tmp_result/*
 .tags
 .tags_sorted_by_file
 
 
 
 
+tmp_result/mono_VI/gw.txt
+.vscode/launch.json
+tmp_result/mono_VI/biasa.txt
+tmp_result/mono_VI/biasg.txt
+tmp_result/mono_VI/condnum.txt
+tmp_result/mono_VI/scale.txt
+Examples/Stereo/stereo_euroc_VI
+Examples/Monocular/mono_euroc_VI

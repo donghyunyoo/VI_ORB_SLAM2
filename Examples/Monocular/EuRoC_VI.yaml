@@ -2,7 +2,7 @@
 
 # Modify test.InitVIOTmpPath and bagfile to the correct path
 # Path to save tmp files/results
-test.InitVIOTmpPath: "/home/youjiexia/Desktop/StereoVISLAM/tmp_result/mono_VI/"
+test.InitVIOTmpPath: "./tmp_result/mono_VI/"
 
 #--------------------------------------------------------------------------------------------
 # IMU Parameters. Adjust them!

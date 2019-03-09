@@ -46,7 +46,8 @@ public:
 
     Vector3d static OptimizeInitialGyroBias(const std::list<KeyFrame*> &lLocalKeyFrames);
     Vector3d static OptimizeInitialGyroBias(const std::vector<KeyFrame*> &vLocalKeyFrames);
-    Vector3d static OptimizeInitialGyroBias(const std::vector<Frame> &vFrames);
+    //Vector3d static OptimizeInitialGyroBias(const std::vector<Frame> &vFrames);
+    Vector3d static OptimizeInitialGyroBias(const std::vector<Frame,Eigen::aligned_allocator<Frame>> &vFrames); // to remove eigen error!
 
     void static LocalBundleAdjustment(KeyFrame *pKF, const std::list<KeyFrame*> &lLocalKeyFrames, bool* pbStopFlag, Map* pMap, LocalMapping* pLM=NULL);
 

@@ -313,7 +313,7 @@ int main(int argc, char **argv)
         //sprintf(fullPath,"%s/%s","/home/fyj/Code/C++/LearnVIORB/Examples/ROS/ORB_VIO/v2_03_diff/V2_03_difficult/mav0/cam0/data",temp.c_str());
         sprintf(fullPath, "%s/%s", argv[5], temp.c_str());
         cv::Mat im = cv::imread(fullPath, 0);
-        // cout<<fullPath<<endl;
+        cout<<fullPath<<endl;
         memset(fullPath, 0, 100);
         //  cout<<"-----------------------FYJ----------------------"<<iListData[j].timeStamp<<endl;
         //忽略掉最开始的config._testDiscardTime内的时间段
@@ -363,7 +363,7 @@ int main(int argc, char **argv)
     delete [] fullPath;
     SLAM.SaveKeyFrameTrajectoryNavState(config._tmpFilePath +argv[6]+ "_MonoVI.txt"); // from body(IMU) to world.
     // Save camera trajectory
-    // SLAM.SaveTrajectoryTUM(config._tmpFilePath + argv[6]+"_MonoVio.txt"); //from cam to world.
+     SLAM.SaveTrajectoryTUM(config._tmpFilePath + argv[6]+"_MonoVio.txt"); //from cam to world.
     
     // Tracking time statistics
     sort(vTimesTrack.begin(), vTimesTrack.end());
