@@ -777,9 +777,9 @@ int Optimizer::PoseOptimization(Frame *pFrame, Frame* pLastFrame, const IMUPrein
 
 
         //        //Debug log
-        //        cout<<nBad<<" bad Points in iter "<<it<<", rest points: "<<optimizer.edges().size()<<endl;
-        //        cout<<nBadLast<<" bad Points of last Frame in iter "<<it<<endl;
-        //        cout<<"NavState edge chi2: "<<eNS->chi2()<<endl;
+               cout<<nBad<<" bad Points in iter "<<it<<", rest points: "<<optimizer.edges().size()<<endl;
+                cout<<nBadLast<<" bad Points of last Frame in iter "<<it<<endl;
+                //cout<<"NavState edge chi2: "<<eNS->chi2()<<endl;
 
         //if(vpEdgesMono.size() - nBad < 10)
         if (optimizer.edges().size() < 10)

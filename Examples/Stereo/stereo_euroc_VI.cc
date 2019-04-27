@@ -113,7 +113,12 @@ void loadImageList(char * imagePath, std::vector<ICell> &iListData)
     //  return 0;
 }
 
-
+/**
+ * @brief 
+ * 
+ * @param imuPath 
+ * @param vimuData 
+ */
 void loadIMUFile(char * imuPath, std::vector<ORB_SLAM2::IMUData> &vimuData)
 {
     ifstream inf;

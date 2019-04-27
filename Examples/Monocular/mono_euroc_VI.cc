@@ -267,9 +267,14 @@ int main(int argc, char **argv)
     {
         std::vector<ORB_SLAM2::IMUData> vimuData;
         /*
-        *imu 的频率是200HZ 图像帧率是20HZ 所以简单的认为每一帧图像对应10个imu数据
+        * imu frequency is 200HZ image frame rate is 20HZ, so simply think that each frame image corresponds to 10 imu data
         */
-        for (unsigned int i = 0; i < 10; i++)
+        //for (unsigned int i = 0; i < 10; i++)
+
+        cout << "for realsense"<<endl;
+        cout << "imu frequency is 70HZ image frame rate is 20HZ, so simply think that each frame image corresponds to 3 imu data" << endl;
+        int nImuPerImg = 10;
+        for (unsigned int i = 0; i < nImuPerImg; i++)    // for realsense
         {
             //                cout<<"*************************************************************************"<<endl;
             //char temp[10] = {0};
@@ -301,8 +306,12 @@ int main(int argc, char **argv)
             //ORB_SLAM2::IMUData imudata(allimuData[10*j+i]._g(0),allimuData[10*j+i]._g(1),allimuData[10*j+i]._g(2),
             //       allimuData[10*j+i]._a(0),allimuData[10*j+i]._a(1),allimuData[10*j+i]._a(2),j*0.05+i*0.005);//j*0.0005+i*0.00005
 
-            ORB_SLAM2::IMUData imudata(allimuData[10 * j + i]._g(0), allimuData[10 * j + i]._g(1), allimuData[10 * j + i]._g(2),
-                                       allimuData[10 * j + i]._a(0), allimuData[10 * j + i]._a(1), allimuData[10 * j + i]._a(2), allimuData[10 * j + i]._t); //j*0.0005+i*0.00005
+            //ORB_SLAM2::IMUData imudata(allimuData[10 * j + i]._g(0), allimuData[10 * j + i]._g(1), allimuData[10 * j + i]._g(2),
+            //                           allimuData[10 * j + i]._a(0), allimuData[10 * j + i]._a(1), allimuData[10 * j + i]._a(2), allimuData[10 * j + i]._t); //j*0.0005+i*0.00005
+            
+            // for realsense
+            ORB_SLAM2::IMUData imudata(allimuData[nImuPerImg * j + i]._g(0), allimuData[nImuPerImg * j + i]._g(1), allimuData[nImuPerImg * j + i]._g(2),
+                                       allimuData[nImuPerImg * j + i]._a(0), allimuData[nImuPerImg * j + i]._a(1), allimuData[nImuPerImg * j + i]._a(2), allimuData[nImuPerImg * j + i]._t); //j*0.0005+i*0.00005
             vimuData.push_back(imudata);
         }
 
@@ -361,9 +370,10 @@ int main(int argc, char **argv)
 //          break;
     }
     delete [] fullPath;
-    SLAM.SaveKeyFrameTrajectoryNavState(config._tmpFilePath +argv[6]+ "_MonoVI.txt"); // from body(IMU) to world.
+    SLAM.SaveKeyFrameTrajectoryNavState(config._tmpFilePath +argv[6]+ "_MonoVIOKeyframe.txt"); // from body(IMU) to world.
     // Save camera trajectory
-     SLAM.SaveTrajectoryTUM(config._tmpFilePath + argv[6]+"_MonoVio.txt"); //from cam to world.
+     SLAM.SaveTrajectoryTUM(config._tmpFilePath + argv[6]+"_MonoVIO.txt"); //from cam to world.
+    
     
     // Tracking time statistics
     sort(vTimesTrack.begin(), vTimesTrack.end());

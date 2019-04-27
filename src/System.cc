@@ -145,6 +145,15 @@ cv::Mat System::TrackMonoVI(const cv::Mat &im, const std::vector<IMUData> &vimu,
 
 
 //这里输入的都是矫正之后的图像
+/**
+ * @brief traking for stereo VIO
+ * 
+ * @param imLeft 
+ * @param imRight 
+ * @param vimu 
+ * @param timestamp 
+ * @return cv::Mat. pose 
+ */
 cv::Mat System::TrackStereoVI(const cv::Mat &imLeft, const cv::Mat &imRight, const std::vector<IMUData> &vimu, const double &timestamp)
 {
     if(mSensor!=STEREO)
@@ -166,12 +175,12 @@ cv::Mat System::TrackStereoVI(const cv::Mat &imLeft, const cv::Mat &imRight, con
                 usleep(1000);
             }
 
-            mpTracker->InformOnlyTracking(true);
+            mpTracker->InformOnlyTracking(true); // localization mode
             mbActivateLocalizationMode = false;
         }
         if(mbDeactivateLocalizationMode)
         {
-            mpTracker->InformOnlyTracking(false);
+            mpTracker->InformOnlyTracking(false); // slam mode
             mpLocalMapper->Release();
             mbDeactivateLocalizationMode = false;
         }
@@ -460,12 +469,12 @@ void System::Shutdown()
 void System::SaveTrajectoryTUM(const string &filename)
 {
     cout << endl << "Saving camera trajectory to " << filename << " ..." << endl;
-    if(mSensor==MONOCULAR)
+    /*if(mSensor==MONOCULAR)
     {
         cerr << "ERROR: SaveTrajectoryTUM cannot be used for monocular." << endl;
         return;
     }
-
+    */
     vector<KeyFrame*> vpKFs = mpMap->GetAllKeyFrames();
     sort(vpKFs.begin(),vpKFs.end(),KeyFrame::lId);
 

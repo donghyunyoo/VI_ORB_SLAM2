@@ -8,6 +8,10 @@ namespace ORB_SLAM2
 
 using namespace Eigen;
 
+/**
+ * @brief IMU class
+ * @detail has raw data, bias, covariance of bias random walk, covariance of measurement 
+ */
 class IMUData
 {
 public:

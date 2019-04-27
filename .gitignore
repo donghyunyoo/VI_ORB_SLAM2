@@ -51,3 +51,6 @@ tmp_result/mono_VI/condnum.txt
 tmp_result/mono_VI/scale.txt
 Examples/Stereo/stereo_euroc_VI
 Examples/Monocular/mono_euroc_VI
+.vscode/ipch/2f58cca724ea4636/mmap_address.bin
+*.bin
+*.ipch

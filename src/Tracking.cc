@@ -233,6 +233,7 @@ bool Tracking::TrackLocalMapWithIMU(bool bMapUpdated)
     // Map updated, optimize with last KeyFrame
     if (mpLocalMapper->GetFirstVINSInited() || bMapUpdated)
     {
+        cout << "IMU preintegration in TrackLocalMapWithIMU()" << endl;
         // Get initial pose from Last KeyFrame
         IMUPreintegrator imupreint = GetIMUPreIntSinceLastKF(&mCurrentFrame, mpLastKeyFrame, mvIMUSinceLastKF);
 
@@ -241,12 +242,13 @@ bool Tracking::TrackLocalMapWithIMU(bool bMapUpdated)
         if (mCurrentFrame.GetNavState().Get_dBias_Acc().norm() > 1e-6) cerr << "TrackLocalMapWithIMU current Frame dBias acc not zero" << endl;
         if (mCurrentFrame.GetNavState().Get_dBias_Gyr().norm() > 1e-6) cerr << "TrackLocalMapWithIMU current Frame dBias gyr not zero" << endl;
 
-        //
+        cout <<"PoseOptimization()"<<endl;
         Optimizer::PoseOptimization(&mCurrentFrame, mpLastKeyFrame, imupreint, mpLocalMapper->GetGravityVec(), true);
     }
     // Map not updated, optimize with last Frame
     else
     {
+        cout << "IMU preintegration in TrackLocalMapWithIMU()" << endl;
         // Get initial pose from Last Frame
         IMUPreintegrator imupreint = GetIMUPreIntSinceLastFrame(&mCurrentFrame, &mLastFrame);
 
@@ -298,6 +300,7 @@ void Tracking::PredictNavStateByIMU(bool bMapUpdated)
     {
         if (mpLocalMapper->GetFirstVINSInited() && !bMapUpdated) cerr << "2-FirstVinsInit, but not bMapUpdated. shouldn't" << endl;
 
+        cout << "IMU preintegration in PredictNavStateByIMU()" << endl;
         // Compute IMU Pre-integration
         mIMUPreIntInTrack = GetIMUPreIntSinceLastKF(&mCurrentFrame, mpLastKeyFrame, mvIMUSinceLastKF);
 
@@ -314,6 +317,7 @@ void Tracking::PredictNavStateByIMU(bool bMapUpdated)
     // Map not updated, optimize with last Frame
     else
     {
+        cout << "IMU preintegration in PredictNavStateByIMU()" << endl;
         // Compute IMU Pre-integration
         mIMUPreIntInTrack = GetIMUPreIntSinceLastFrame(&mCurrentFrame, &mLastFrame);
 
@@ -520,9 +524,18 @@ cv::Mat Tracking::GrabImageMonoVI(const cv::Mat &im, const std::vector<IMUData> 
 }
 
 //NOTE    GrabImageStereoVI(imLeft,imRight,vimu,timestamp);
+/**
+ * @brief 
+ * 
+ * @param imRectLeft 
+ * @param imRectRight 
+ * @param vimu 
+ * @param timestamp 
+ * @return cv::Mat 
+ */
 cv::Mat Tracking::GrabImageStereoVI(const cv::Mat &imRectLeft, const cv::Mat &imRectRight, const std::vector<IMUData> &vimu, const double &timestamp)
 {
-    mvIMUSinceLastKF.insert(mvIMUSinceLastKF.end(), vimu.begin(), vimu.end());
+    mvIMUSinceLastKF.insert(mvIMUSinceLastKF.end(), vimu.begin(), vimu.end()); // imu data from the last KF to current frame
     mImGray = imRectLeft;
     cv::Mat imGrayRight = imRectRight;
 
