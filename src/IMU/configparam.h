@@ -8,6 +8,10 @@ namespace ORB_SLAM2
 {
 
 //for monocular orbvio
+/**
+ * @brief for monocular orbvio
+ * 
+ */
 class ConfigParam
 {
 public:
@@ -48,6 +52,10 @@ private:
 };
 
 //for  stereo orbvio
+/**
+ * @brief for stereo orbvio
+ * 
+ */
 class StereoConfigParam : public  ConfigParam
 {
 public:
@@ -63,6 +71,19 @@ private:
 
 };
 
+class RGBDConfigParam: public ConfigParam
+{
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    RGBDConfigParam(std::string configfile);
+
+    // what are these parameters?
+    cv::Mat  _K_l, _K_r, _P_l, _P_r, _R_l, _R_r, _D_l, _D_r;
+    int  _rows_l, _cols_l, _rows_r, _cols_r;
+
+private:
+ 
+};
 
 
 }

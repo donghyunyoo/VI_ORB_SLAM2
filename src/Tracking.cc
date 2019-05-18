@@ -576,6 +576,57 @@ cv::Mat Tracking::GrabImageStereoVI(const cv::Mat &imRectLeft, const cv::Mat &im
 
 
 
+//NOTE    GrabImageRGBDVI(imRGB,imD,vimu,timestamp);
+/**
+ * @brief 
+ * 
+ * @param imRGB
+ * @param imD
+ * @param vimu 
+ * @param timestamp 
+ * @return cv::Mat 
+ */
+cv::Mat Tracking::GrabImageRGBDVI(const cv::Mat &imRGB, const cv::Mat &imD, const std::vector<IMUData> &vimu, const double &timestamp)
+{
+    mvIMUSinceLastKF.insert(mvIMUSinceLastKF.end(), vimu.begin(), vimu.end()); // imu data from the last KF to current frame
+    mImGray = imRGB;
+    cv::Mat imDepth = imD;
+
+    if (mImGray.channels() == 3)
+    {
+        if (mbRGB)
+        {
+            cvtColor(mImGray, mImGray, CV_RGB2GRAY);
+        }
+        else
+        {
+            cvtColor(mImGray, mImGray, CV_BGR2GRAY);
+        }
+    }
+    else if (mImGray.channels() == 4)
+    {
+        if (mbRGB)
+        {
+            cvtColor(mImGray, mImGray, CV_RGBA2GRAY);
+        }
+        else
+        {
+            cvtColor(mImGray, mImGray, CV_BGRA2GRAY);
+        }
+    }
+
+    if ((fabs(mDepthMapFactor - 1.0f) > 1e-5) || imDepth.type() != CV_32F)
+        imDepth.convertTo(imDepth, CV_32F, mDepthMapFactor);
+
+//NOTE
+    mCurrentFrame = Frame(mImGray, imDepth, timestamp, vimu, mpORBextractorLeft, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth, mpLastKeyFrame);
+
+    Track();
+
+    return mCurrentFrame.mTcw.clone();
+}
+
+
 //-------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------
@@ -835,11 +886,10 @@ void Tracking::Track()
         bMapUpdated = true;
     }
 
-
     if (mState == NOT_INITIALIZED)
     {
         if (mSensor == System::STEREO || mSensor == System::RGBD)
-            StereoInitialization();
+            StereoInitialization(); // TODO: initialization for what?
         else
             MonocularInitialization();
 
@@ -864,7 +914,7 @@ void Tracking::Track()
                 // Local Mapping might have changed some MapPoints tracked in last frame
                 CheckReplacedInLastFrame();
 
-                //TODO
+                //TODO: optimize for real time
 #ifdef TRACK_WITH_IMU
                 // If Visual-Inertial is initialized
                 if (mpLocalMapper->GetVINSInited())
@@ -1394,7 +1444,7 @@ bool Tracking::TrackReferenceKeyFrame()
 
     int nmatches = matcher.SearchByBoW(mpReferenceKF, mCurrentFrame, vpMapPointMatches);
 
-    if (nmatches < 15)
+    if (nmatches < 15)  // to parameters!!!
         return false;
 
     mCurrentFrame.mvpMapPoints = vpMapPointMatches;
@@ -1423,7 +1473,7 @@ bool Tracking::TrackReferenceKeyFrame()
         }
     }
 
-    return nmatchesMap >= 10;
+    return nmatchesMap >= 10; // to parameters!!!
 }
 
 void Tracking::UpdateLastFrame()
@@ -1592,10 +1642,10 @@ bool Tracking::TrackLocalMap()
 
     // Decide if the tracking was succesful
     // More restrictive if there was a relocalization recently
-    if (mCurrentFrame.mnId < mnLastRelocFrameId + mMaxFrames && mnMatchesInliers < 50)
+    if (mCurrentFrame.mnId < mnLastRelocFrameId + mMaxFrames && mnMatchesInliers < 50) //TODO: to paramaters
         return false;
 
-    if (mnMatchesInliers < 30)
+    if (mnMatchesInliers < 30)  // TODO: to parameters
         return false;
     else
         return true;

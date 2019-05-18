@@ -190,6 +190,7 @@ const IMUPreintegrator & KeyFrame::GetIMUPreInt(void)
     return mIMUPreInt;
 }
 
+// check!!!: check this implementation
 void KeyFrame::ComputePreInt(void)
 {
     unique_lock<mutex> lock(mMutexIMUData);
@@ -240,20 +241,20 @@ void KeyFrame::ComputePreInt(void)
             const IMUData& imu = mvIMUData[i];
             double nextt;
             if(i==mvIMUData.size()-1) {
-                cout << "i==mvIMUData.size()-1" <<endl;
-                cout << "mTimeStamp=" << mTimeStamp <<endl;
-                cout<< mvIMUData[i]._t << endl;
+                //cout << "i==mvIMUData.size()-1" <<endl;
+                //cout << "mTimeStamp=" << mTimeStamp <<endl;
+                //cout<< mvIMUData[i]._t << endl;
                 nextt = mTimeStamp;         // last IMU, next is this KeyFrame
                 //nextt = mvIMUData[i]._t+0.015;         // last IMU, next is this KeyFrame
             }
             else {
-                cout << "else" <<endl;
-                cout<< mvIMUData[i]._t << "," << mvIMUData[i+1]._t << "," << mvIMUData[i+2]._t << endl;
+                //cout << "else" <<endl;
+                //cout<< mvIMUData[i]._t << "," << mvIMUData[i+1]._t << "," << mvIMUData[i+2]._t << endl;
                 nextt = mvIMUData[i+1]._t;  // regular condition, next is imu data
             }
             // delta time
             double dt = nextt - imu._t;
-            cout << "dt=" << dt <<endl;
+            //cout << "dt=" << dt <<endl;
 
             // update pre-integrator
             mIMUPreInt.update(imu._g - bg,imu._a - ba,dt);

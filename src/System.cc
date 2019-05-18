@@ -202,6 +202,64 @@ cv::Mat System::TrackStereoVI(const cv::Mat &imLeft, const cv::Mat &imRight, con
 
 
 
+/**
+ * @brief traking for RGBD VIO
+ * 
+ * @param im 
+ * @param depthmap
+ * @param vimu 
+ * @param timestamp 
+ * @return cv::Mat. pose 
+ */
+cv::Mat System::TrackRGBDVI(const cv::Mat &im, const cv::Mat &depthmap, const std::vector<IMUData> &vimu, const double &timestamp)
+{
+    if(mSensor!=RGBD)
+    {
+        cerr << "ERROR: you called TrackStereoVI but input sensor was not set to STEREO." << endl;
+        exit(-1);
+    }
+
+    // Check mode change
+    {
+        unique_lock<mutex> lock(mMutexMode);
+        if(mbActivateLocalizationMode)
+        {
+            mpLocalMapper->RequestStop();
+
+            // Wait until Local Mapping has effectively stopped
+            while(!mpLocalMapper->isStopped())
+            {
+                usleep(1000);
+            }
+
+            mpTracker->InformOnlyTracking(true); // localization mode
+            mbActivateLocalizationMode = false;
+        }
+        if(mbDeactivateLocalizationMode)
+        {
+            mpTracker->InformOnlyTracking(false); // slam mode
+            mpLocalMapper->Release();
+            mbDeactivateLocalizationMode = false;
+        }
+    }
+
+    // Check reset
+    {
+    unique_lock<mutex> lock(mMutexReset);
+    if(mbReset)
+    {
+        mpTracker->Reset();
+        mbReset = false;
+    }
+    }
+
+//NOTE 
+    return mpTracker->GrabImageRGBDVI(im,depthmap,vimu,timestamp);
+}
+
+
+
+
 
 //-------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------
@@ -211,12 +269,14 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
                const bool bUseViewer):mSensor(sensor),mbReset(false),mbActivateLocalizationMode(false),
         mbDeactivateLocalizationMode(false)
 {
+    /*
     // Output welcome message
     cout << endl <<
     "ORB-SLAM2 Copyright (C) 2014-2016 Raul Mur-Artal, University of Zaragoza." << endl <<
     "This program comes with ABSOLUTELY NO WARRANTY;" << endl  <<
     "This is free software, and you are welcome to redistribute it" << endl <<
     "under certain conditions. See LICENSE.txt." << endl << endl;
+     */
 
     cout << "Input sensor was set to: ";
 
@@ -463,7 +523,8 @@ void System::Shutdown()
         usleep(5000);
     }
 
-    pangolin::BindToContext("ORB-SLAM2: Map Viewer");
+    //pangolin::BindToContext("ORB-SLAM2: Map Viewer");
+    pangolin::BindToContext("ORBIO V0.5: SLAM Viewer");
 }
 
 void System::SaveTrajectoryTUM(const string &filename)

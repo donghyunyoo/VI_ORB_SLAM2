@@ -31,7 +31,7 @@
 #                                    data_0411 
 
 ./Examples/Monocular/mono_realsense_VI  Vocabulary/ORBvoc.bin \
-                                   Examples/Monocular/rs435i_1.yaml \
+                                   Examples/Monocular/rs435i_2.yaml \
                                     /mnt/hdd1/work/dataset/Realsense_D435i_Data/data_0426/imu0.csv \
                                     /mnt/hdd1/work/dataset/Realsense_D435i_Data/data_0426/rgb_VIO.txt \
                                     /mnt/hdd1/work/dataset/Realsense_D435i_Data/data_0426/rgb \

@@ -56,7 +56,8 @@ void Viewer::Run()
     mbFinished = false;
     mbStopped = false;
 
-    pangolin::CreateWindowAndBind("ORB-SLAM2: Map Viewer",1024,768);
+    //pangolin::CreateWindowAndBind("ORB-SLAM2: Map Viewer",1024,768);
+    pangolin::CreateWindowAndBind("ORBIO V0.5: SLAM Viewer",1024,768);
 
     // 3D Mouse handler requires depth testing to be enabled
     glEnable(GL_DEPTH_TEST);
@@ -66,12 +67,15 @@ void Viewer::Run()
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     pangolin::CreatePanel("menu").SetBounds(0.0,1.0,0.0,pangolin::Attach::Pix(175));
-    pangolin::Var<bool> menuFollowCamera("menu.Follow Camera",true,true);
-    pangolin::Var<bool> menuShowPoints("menu.Show Points",true,true);
-    pangolin::Var<bool> menuShowKeyFrames("menu.Show KeyFrames",true,true);
-    pangolin::Var<bool> menuShowGraph("menu.Show Graph",true,true);
-    pangolin::Var<bool> menuLocalizationMode("menu.Localization Mode",false,true);
+    pangolin::Var<bool> menuFollowCamera("menu.Camera Tracking",true,true);
+    pangolin::Var<bool> menuShowPoints("menu.Feature Points",true,true);
+    pangolin::Var<bool> menuShowKeyFrames("menu.KeyFrames",true,true);
+    pangolin::Var<bool> menuShowGraph("menu.Path",true,true);
+    //pangolin::Var<bool> menuLocalizationMode("menu.Localization Mode",false,true);
+    pangolin::Var<bool> menuSaveMap("menu.Save Map",false,false); //TODO
     pangolin::Var<bool> menuReset("menu.Reset",false,false);
+    pangolin::Var<bool> menuShutDown("menu.Shut Down",false,false);
+    pangolin::Var<bool> menuPauseResume("menu.Pause/Resume",false,false);
 
     // Define Camera Render Object (for view / scene browsing)
     pangolin::OpenGlRenderState s_cam(
@@ -87,7 +91,7 @@ void Viewer::Run()
     pangolin::OpenGlMatrix Twc;
     Twc.SetIdentity();
 
-    cv::namedWindow("ORB-SLAM2: Current Frame");
+    cv::namedWindow("ORBIO V0.5: Current Image");
 
     bool bFollow = true;
     bool bLocalizationMode = false;
@@ -112,7 +116,7 @@ void Viewer::Run()
         {
             bFollow = false;
         }
-
+        /*
         if(menuLocalizationMode && !bLocalizationMode)
         {
             mpSystem->ActivateLocalizationMode();
@@ -122,7 +126,7 @@ void Viewer::Run()
         {
             mpSystem->DeactivateLocalizationMode();
             bLocalizationMode = false;
-        }
+        }*/
 
         d_cam.Activate(s_cam);
         glClearColor(1.0f,1.0f,1.0f,1.0f);
@@ -135,7 +139,7 @@ void Viewer::Run()
         pangolin::FinishFrame();
 
         cv::Mat im = mpFrameDrawer->DrawFrame();
-        cv::imshow("ORB-SLAM2: Current Frame",im);
+        cv::imshow("ORBIO V0.5: Current Image",im);
         cv::waitKey(mT);
 
         if(menuReset)
@@ -143,7 +147,7 @@ void Viewer::Run()
             menuShowGraph = true;
             menuShowKeyFrames = true;
             menuShowPoints = true;
-            menuLocalizationMode = false;
+            //menuLocalizationMode = false;
             if(bLocalizationMode)
                 mpSystem->DeactivateLocalizationMode();
             bLocalizationMode = false;
