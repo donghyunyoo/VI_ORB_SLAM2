@@ -116,6 +116,11 @@ void Viewer::Run()
         {
             bFollow = false;
         }
+        // temp!!!mViewpointZ
+        //mViewpointX = 0;
+        //mViewpointY = 10;
+        //mViewpointZ = 10;
+        //s_cam.SetModelViewMatrix(pangolin::ModelViewLookAt(mViewpointX,mViewpointY,mViewpointZ, 0,0,0,0.0,-1.0, 0.0));
         /*
         if(menuLocalizationMode && !bLocalizationMode)
         {
@@ -231,6 +236,22 @@ void Viewer::Release()
 {
     unique_lock<mutex> lock(mMutexStop);
     mbStopped = false;
+}
+
+void Viewer::TopView()
+{
+    unique_lock<mutex> lock(mMutexStop);
+    // Define Camera Render Object (for view / scene browsing)
+    pangolin::OpenGlRenderState s_cam(
+            pangolin::ProjectionMatrix(1024,768,mViewpointF,mViewpointF,512,389,0.1,1000),
+            pangolin::ModelViewLookAt(mViewpointX,mViewpointY,mViewpointZ, 0,0,0,0.0,-1.0, 0.0)
+    );
+    mViewpointX = 0;
+    mViewpointY = 10;
+    mViewpointZ = 10;
+
+    s_cam.SetModelViewMatrix(pangolin::ModelViewLookAt(mViewpointX,mViewpointY,mViewpointZ, 0,0,0,0.0,-1.0, 0.0));
+
 }
 
 }

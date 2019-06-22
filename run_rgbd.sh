@@ -61,13 +61,13 @@
 #                                   data_0429_cmu_m1_rgbd
 
 
-./Examples/RGB-D/rgbd_tum_VI  Vocabulary/ORBvoc.bin \
+./Examples/RGB-D/rgbd_tum_VI_realtime  Vocabulary/ORBvoc.bin \
                                   Examples/RGB-D/rs435i_2.yaml \
-                                   /mnt/hdd1/work/dataset/Realsense_D435i_Data/data_0503/upwide_m1/imu0.csv \
-                                   /mnt/hdd1/work/dataset/Realsense_D435i_Data/data_0503/upwide_m1/rgb_VIO.txt \
-                                   /mnt/hdd1/work/dataset/Realsense_D435i_Data/data_0503/upwide_m1/rgb \
-                                   /mnt/hdd1/work/dataset/Realsense_D435i_Data/data_0503/upwide_m1/depth\
-                                   data_0503_upwide_m1_rgbd
+                                   /mnt/hdd1/work/dataset/Realsense_D435i_Data/data_0503/short_s1/imu0.csv \
+                                   /mnt/hdd1/work/dataset/Realsense_D435i_Data/data_0503/short_s1/rgb_VIO.txt \
+                                   /mnt/hdd1/work/dataset/Realsense_D435i_Data/data_0503/short_s1/rgb \
+                                   /mnt/hdd1/work/dataset/Realsense_D435i_Data/data_0503/short_s1/depth\
+                                   data_0503_short_s1/rgbd
 
 
 

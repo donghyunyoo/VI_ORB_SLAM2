@@ -512,6 +512,7 @@ void System::Reset()
 
 void System::Shutdown()
 {
+    mpViewer->TopView();
     mpLocalMapper->RequestFinish();
     mpLoopCloser->RequestFinish();
     mpViewer->RequestFinish();

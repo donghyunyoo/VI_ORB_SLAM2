@@ -372,10 +372,14 @@ int main(int argc, char **argv)
         };
 //        if(bstop)
 //          break;
+        //sleep(0.10);
     }
     delete [] fullPath;
     delete [] fullPathR;
-    SLAM.SaveKeyFrameTrajectoryNavState(config._tmpFilePath +argv[7]+ "_StereoVIOKeyframe.txt");// from body(IMU) to world.
+
+
+//SLAM.SaveKeyFrameTrajectoryNavState(config._tmpFilePath +argv[7]+ "_StereoVIOKeyframe.txt");// from body(IMU) to world.
+    SLAM.SaveKeyFrameTrajectoryTUM(config._tmpFilePath +argv[7]+ "_StereoVIOKeyframe.txt");// from body(IMU) to world.
     // Save camera trajectory
     SLAM.SaveTrajectoryTUM(config._tmpFilePath + argv[7]+"_StereoVIO.txt"); //from cam to world.
     // Tracking time statistics
@@ -390,13 +394,14 @@ int main(int argc, char **argv)
     cout << "mean tracking time: " << totaltime / nImages << endl;
 
 
-
-
     cout << endl << endl << "press any key to shutdown" << endl;
     getchar();
 
     // Stop all threads
     SLAM.Shutdown();
+
+    
+
     return 0;
 }
 

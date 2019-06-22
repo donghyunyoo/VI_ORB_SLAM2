@@ -1499,7 +1499,7 @@ void Optimizer::LocalBundleAdjustmentNavState(KeyFrame *pCurKF, const std::list<
     // First try
     //optimizer.setVerbose(true);
     optimizer.initializeOptimization();
-    optimizer.optimize(5);
+    optimizer.optimize(4); // TODO: parameters  default=5
 
     bool bDoMore = true;
 
@@ -1566,7 +1566,7 @@ void Optimizer::LocalBundleAdjustmentNavState(KeyFrame *pCurKF, const std::list<
 
         // Optimize again without the outliers
         optimizer.initializeOptimization(0);
-        optimizer.optimize(10);
+        optimizer.optimize(8); //TODO: parameters default=10
 
     }
 

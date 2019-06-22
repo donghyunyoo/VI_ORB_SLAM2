@@ -56,6 +56,8 @@ public:
 
     void Release();
 
+    void TopView();
+
 private:
 
     bool Stop();

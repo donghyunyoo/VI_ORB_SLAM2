@@ -41,6 +41,8 @@
 #include <functional>
 #include <atomic>
 
+#define REALTIME
+
 using namespace std;
 
 void LoadImages(const string &strAssociationFilename, vector<string> &vstrImageFilenamesRGB,
@@ -72,9 +74,22 @@ void loadImageList(char * imagePath, std::vector<ICell> &iListData)
     size_t comma2 = 0;
     ICell temp;
     getline(inf, line);
+
+#ifdef REALTIME
+    int idx = 0;
+#endif
+
     while (!inf.eof())
     {
         getline(inf, line);
+
+
+#ifdef REALTIME
+        idx++;
+        // downsampling by 3 for realtime processing
+        if (idx%3!=0)
+            continue;
+#endif
 
         comma = line.find(',', 0);
         //string temp1 = line.substr(0,comma).substr(0,10);
@@ -128,9 +143,22 @@ void loadIMUFile(char * imuPath, std::vector<ORB_SLAM2::IMUData> &vimuData)
     double imuTimeStamp = 0;
 
     getline(inf, line);
+
+#ifdef REALTIME
+    int idx =0;
+#endif
+
     while (!inf.eof())
     {
         getline(inf, line);
+
+#ifdef REALTIME
+        idx++;
+        // downsampling by 2 for realtime processing
+        if (idx%2!=0)
+            continue;
+#endif
+
 
         comma = line.find(',', 0);
         //string temp = line.substr(0,comma);
@@ -413,12 +441,15 @@ int main(int argc, char **argv)
         // comment seems not bad
         bool bstop = false;
         //cout<<"----------------------------------"<<j<<"----------------------------------------"<<endl;
-        //NOTE 这里应该是非实时的关键所在    这里只是为了保证精确度，所以去掉也是没有关系的。
+        //NOTE  This should be the key to non-real-time. This is just to ensure accuracy, so it doesn't matter if you remove it.
+
+        
         while (!SLAM.bLocalMapAcceptKF())
         {
             bstop = true;
         };
 
+        bstop = true;
         /*
         // Wait to load the next frame
         double T=0;
@@ -480,6 +511,9 @@ int main(int argc, char **argv)
             usleep((T-ttrack)*1e6);
     }
 #endif
+
+    //SLAM.mpViewer->mViewpointX = 0;
+
     cout << endl << endl << "press any key to shutdown" << endl;
     getchar();
     // Stop all threads

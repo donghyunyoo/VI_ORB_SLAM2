@@ -21,6 +21,8 @@ Vocabulary/ORBvoc.txt
 Vocabulary/bin_vocabulary
 build/
 tmp_result/
+cmake-build-debug/
+
 *~
 lib/
 .idea/
