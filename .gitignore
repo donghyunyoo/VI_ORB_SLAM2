@@ -56,3 +56,8 @@ Examples/Monocular/mono_euroc_VI
 .vscode/ipch/2f58cca724ea4636/mmap_address.bin
 *.bin
 *.ipch
+Examples/RGB-D/rgbd_tum_VI
+Examples/Monocular/mono_euroc_VI
+Examples/Monocular/mono_realsense_VI
+Examples/RGB-D/rgbd_tum_VI_realtime
+Examples/Stereo/stereo_euroc_VI
