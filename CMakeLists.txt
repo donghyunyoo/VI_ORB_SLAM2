@@ -39,6 +39,21 @@ endif()
 find_package(Eigen3 3.1.0 REQUIRED)
 find_package(Pangolin REQUIRED)
 find_package(Cholmod REQUIRED)
+find_package(realsense2 REQUIRED)
+find_package(OpenGL REQUIRED)
+set(DEPENDENCIES realsense2 ${OpenCV_LIBS})
+find_library(REALSENSE2_FOUND realsense2 HINTS ${LIBRARY_DIR} REQUIRED)
+if(NOT REALSENSE2_FOUND)
+    SET(REALSENSE2_FOUND "realsense2")
+    message(WARN "Failed to find_library(realsense2)")
+endif()
+#target_link_libraries( ${PROJECT_NAME} realsense2 ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${realsense2_LIBRARY})
+
+set(BOOST_LIBS date_time system)
+find_package(Boost COMPONENTS ${BOOST_LIBS} REQUIRED)
+#target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+find_package(Threads REQUIRED)
+#target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 
 include_directories(
 ${PROJECT_SOURCE_DIR}
@@ -47,6 +62,10 @@ ${PROJECT_SOURCE_DIR}/src
 ${EIGEN3_INCLUDE_DIR}
 ${Pangolin_INCLUDE_DIRS}
 ${CHOLMOD_INCLUDE_DIR}
+${PROJECT_SOURCE_DIR}/common
+${PROJECT_SOURCE_DIR}/third-party/imgui
+${PROJECT_SOURCE_DIR}/sensors
+${PROJECT_SOURCE_DIR}/dead_reckoning
 )
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
@@ -91,6 +110,14 @@ src/IMU/NavState.cpp
 
 src/IMU/g2otypes.h
 src/IMU/g2otypes.cpp
+
+sensors/robot_control.h
+sensors/robot_control.cpp
+sensors/gyro.h
+sensors/gyro.cpp
+sensors/TimeoutSerial.h
+sensors/TimeoutSerial.cpp
+
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -103,55 +130,65 @@ cholmod
 ${CHOLMOD_LIBRARIES}
 ${BLAS_LIBRARIES}
 ${LAPACK_LIBRARIES}
+realsense2 
+${OPENGL_LIBRARIES} 
+${realsense2_LIBRARY}
+${Boost_LIBRARIES}
+${CMAKE_THREAD_LIBS_INIT}
 )
 
 ## Build examples
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/RGB-D)
 
-add_executable(rgbd_tum
-Examples/RGB-D/rgbd_tum.cc)
-target_link_libraries(rgbd_tum ${PROJECT_NAME})
+#add_executable(rgbd_tum
+#Examples/RGB-D/rgbd_tum.cc)
+#target_link_libraries(rgbd_tum ${PROJECT_NAME})
 
-add_executable(rgbd_tum_VI
-Examples/RGB-D/rgbd_tum_VI.cc)
-target_link_libraries(rgbd_tum_VI ${PROJECT_NAME})
+#add_executable(rgbd_tum_VI
+#Examples/RGB-D/rgbd_tum_VI.cc)
+#target_link_libraries(rgbd_tum_VI ${PROJECT_NAME})
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo)
+add_executable(rgbd_VI_rt
+Examples/RGB-D/rgbd_VI_rt.cc)
+target_link_libraries(rgbd_VI_rt ${PROJECT_NAME})
 
-add_executable(stereo_kitti
-Examples/Stereo/stereo_kitti.cc)
-target_link_libraries(stereo_kitti ${PROJECT_NAME})
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo)
 
-add_executable(stereo_euroc
-Examples/Stereo/stereo_euroc.cc)
-target_link_libraries(stereo_euroc ${PROJECT_NAME})
+#add_executable(stereo_kitti
+#Examples/Stereo/stereo_kitti.cc)
+#target_link_libraries(stereo_kitti ${PROJECT_NAME})
 
-add_executable(stereo_euroc_VI
-Examples/Stereo/stereo_euroc_VI.cc)
-target_link_libraries(stereo_euroc_VI ${PROJECT_NAME})
+#add_executable(stereo_euroc
+#Examples/Stereo/stereo_euroc.cc)
+#target_link_libraries(stereo_euroc ${PROJECT_NAME})
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular)
+#add_executable(stereo_euroc_VI
+#Examples/Stereo/stereo_euroc_VI.cc)
+#target_link_libraries(stereo_euroc_VI ${PROJECT_NAME})
 
-add_executable(mono_tum
-Examples/Monocular/mono_tum.cc)
-target_link_libraries(mono_tum ${PROJECT_NAME})
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular)
 
-add_executable(mono_kitti
-Examples/Monocular/mono_kitti.cc)
-target_link_libraries(mono_kitti ${PROJECT_NAME})
+#add_executable(mono_tum
+#Examples/Monocular/mono_tum.cc)
+#target_link_libraries(mono_tum ${PROJECT_NAME})
 
-add_executable(mono_euroc
-Examples/Monocular/mono_euroc.cc)
-target_link_libraries(mono_euroc ${PROJECT_NAME})
+#add_executable(mono_kitti
+#Examples/Monocular/mono_kitti.cc)
+#target_link_libraries(mono_kitti ${PROJECT_NAME})
 
-add_executable(mono_euroc_VI
-Examples/Monocular/mono_euroc_VI.cc)
-target_link_libraries(mono_euroc_VI ${PROJECT_NAME})
+#add_executable(mono_euroc
+#Examples/Monocular/mono_euroc.cc)
+#target_link_libraries(mono_euroc ${PROJECT_NAME})
 
-add_executable(mono_realsense_VI
-Examples/Monocular/mono_realsense_VI.cc)
-target_link_libraries(mono_realsense_VI ${PROJECT_NAME})
+#add_executable(mono_euroc_VI
+#Examples/Monocular/mono_euroc_VI.cc)
+#target_link_libraries(mono_euroc_VI ${PROJECT_NAME})
+
+#add_executable(mono_realsense_VI
+#Examples/Monocular/mono_realsense_VI.cc)
+#target_link_libraries(mono_realsense_VI ${PROJECT_NAME})
+
 
 ## Build tools
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Vocabulary)
